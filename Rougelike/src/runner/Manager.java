@@ -34,6 +34,7 @@ public class Manager extends Thread {
 	public void run() {
 		while(running) {
 			
+			character.setVisibilitySquare();
 			panel1.repaint();
 			manageKeys();
 			
@@ -55,15 +56,19 @@ public class Manager extends Thread {
 		if(keys.contains(KeyEvent.VK_RIGHT)) {
 			character.moveCharacter(KeyEvent.VK_RIGHT);
 			stop++;
+			character.setVisibilitySquare();
 		} else if(keys.contains(KeyEvent.VK_LEFT)) {
 			character.moveCharacter(KeyEvent.VK_LEFT);
 			stop++;
+			character.setVisibilitySquare();
 		} else if(keys.contains(KeyEvent.VK_UP)) {
 			character.moveCharacter(KeyEvent.VK_UP);
 			stop++;
+			character.setVisibilitySquare();
 		} else if(keys.contains(KeyEvent.VK_DOWN)) {
 			character.moveCharacter(KeyEvent.VK_DOWN);
 			stop++;
+			character.setVisibilitySquare();
 		}}
 	}
 	

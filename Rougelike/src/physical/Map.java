@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 public class Map {
 	
-	public int[][] tileMap;
+	public int[][][] tileMap;
 	public BufferedImage[] terrain;
 	
 	public Monster[][] monsterMap;
@@ -17,10 +17,10 @@ public class Map {
 	public int characterArrayY = 0;
 	
 	public Map() {
-		tileMap = new int[50][28];
+		tileMap = new int[50][28][2];
 		for(int i = 0; i < 50; i++) {
 			for(int j = 0; j < 28; j++) {
-				tileMap[i][j] = 0;
+				tileMap[i][j][0] = 0;
 			}
 		}
 		monsterMap = new Monster[50][28];
@@ -30,78 +30,193 @@ public class Map {
 		loadInformations();
 		
 		setupMap();
-		setupMonsters();
+		for(int j = 0; j < 50; j++) {
+			setupMonsters();
+		}
 	}
 	
 	public void setupMap() {
-		for(int i = 0; i < 10; i++) {
+		for(int k = 0; k < 8; k++) {
 			generateRectangularRoom();
 		}
 		setupCharacter();
+		for(int i = 0; i < 40; i++) {
+			generateHorizontalHallway();
+			generateVerticalHallway();
+		}
+		for(int j = 0; j < 50; j++) {
+			for(int l = 0; l < 28; l++) {
+				tileMap[j][0][0] = 2;
+				tileMap[0][l][0] = 2;
+				tileMap[j][27][0] = 2;
+				tileMap[49][l][0] = 2;
+				if(tileMap[j][l][0] != 1) {
+					tileMap[j][l][0] = 2;
+				}
+			}
+		}
 	}
 	
 	public void generateRectangularRoom() {
 		boolean flag1 = true;
 		int height = 0, width = 0, x = 0, y = 0;
 		while(flag1) {
-			height = (int)(Math.random() * (8 - 2 + 1) + 2);
-			width = (int)(Math.random() * (8 - 2 + 1) + 2);
+			height = (int)(Math.random() * (8 - 4 + 1) + 4);
+			width = (int)(Math.random() * (8 - 4 + 1) + 4);
 			x = 0; 
 			y = 0;
 			boolean flag2 = true;
 			while(flag2) {
 				x = (int)(Math.random() * 50);
-				if(x + width < 50 && x - width >= 0) {
-					flag2 = false;
-				}
-			}
-			boolean flag3 = true;
-			while(flag3) {
 				y = (int)(Math.random() * 28);
-				if(y + height < 28 && y - height >= 0) {
-					flag3 = false;
+				if(x + width < 50 && x - width >= 0 && y + height < 28 && y - height >= 0) {
+					flag2 = false;
 				}
 			}
 			int count = 0;
 			for(int i = y; i < y + height; i++) {
 				for(int j = x; j < x + width; j++) {
-					if(tileMap[j][i] != 1) {
+					if(tileMap[j][i][0] != 1) {
 						count++;
 					}
 				}
 			}
-			if(count >= height * width) {
+			if(count >= (height) * (width)) {
 				flag1 = false;
 			}
 		}
 		for(int i = y; i < y + height; i++) {
 			for(int j = x; j < x + width; j++) {
-				if(tileMap[j][i] != 1) {
-					tileMap[j][i] = 1;
+				if(tileMap[j][i][0] != 1) {
+					tileMap[j][i][0] = 1;
+				}
+			}
+		}
+	}
+	
+	public void generateVerticalHallway() {
+		boolean flag1 = true;
+		int x = 0, y = 0;
+		String direction = "";
+		while(flag1) {
+			x = (int)(Math.random() * 50);
+			y = (int)(Math.random() * 28);
+			if(tileMap[x][y][0] == 1) {
+				if(y + 1 < 28 && y - 1 >= 0 && x + 1 < 50 && x - 1 >= 0) {
+					if(tileMap[x][y - 1][0] == 0 && tileMap[x - 1][y - 1][0] == 0 && tileMap[x + 1][y - 1][0] ==  0) {
+						flag1 = false;
+						direction = "up";
+					} else if (tileMap[x][y + 1][0] == 0 && tileMap[x - 1][y + 1][0] == 0 && tileMap[x + 1][y + 1][0] ==  0) {
+						flag1 = false;
+						direction = "down";
+					}
+				}
+			}
+		}
+		boolean flag2 = true;
+		int count = 1;
+		if(direction == "up") {
+			while(flag2) {
+				if(y - count >= 0) {
+					if(tileMap[x][y - count][0] == 0) {
+						tileMap[x][y - count][0] = 1;
+						count++;
+					} else {
+						flag2 = false;
+					}
+				} else {
+					flag2 = false;
+				}
+			}
+		} else if (direction == "down") {
+			while(flag2) {
+				if(y + count < 28) {
+					if(tileMap[x][y + count][0] == 0) {
+						tileMap[x][y + count][0] = 1;
+						count++;
+					} else {
+						flag2 = false;
+					}
+				} else {
+					flag2 = false;
+				}
+			}
+		}
+	}
+	
+	public void generateHorizontalHallway() {
+		boolean flag1 = true;
+		int x = 0, y = 0;
+		String direction = "";
+		while(flag1) {
+			x = (int)(Math.random() * 50);
+			y = (int)(Math.random() * 28);
+			if(tileMap[x][y][0] == 1) {
+				if(x + 1 < 50 && x - 1 >= 0 && y + 1 < 28 && y - 1 >= 0) {
+					if(tileMap[x - 1][y][0] == 0 && tileMap[x - 1][y - 1][0] == 0 && tileMap[x - 1][y + 1][0] ==  0) {
+						flag1 = false;
+						direction = "left";
+					} else if (tileMap[x + 1][y][0] == 0 && tileMap[x + 1][y - 1][0] == 0 && tileMap[x + 1][y + 1][0] ==  0) {
+						flag1 = false;
+						direction = "right";
+					}
+				}
+			}
+		}
+		boolean flag = true;
+		int count = 1;
+		if(direction == "left") {
+			while(flag) {
+				if(x - count >= 0) {
+					if(tileMap[x - count][y][0] == 0) {
+						tileMap[x - count][y][0] = 1;
+						count++;
+					} else {
+						flag = false;
+					}
+				} else {
+					flag = false;
+				}
+			}
+		} else if (direction == "right") {
+			while(flag) {
+				if(x + count < 50) {
+					if(tileMap[x + count][y][0] == 0) {
+						tileMap[x + count][y][0] = 1;
+						count++;
+					} else {
+						flag = false;
+					}
+				} else {
+					flag = false;
 				}
 			}
 		}
 	}
 	
 	public void setupMonsters() {
-		int x = (int)(Math.random() * 50);
-		int y = (int)(Math.random() * 28);
-		/*Monster red1 = new Red(15, 10, monsters[0]);
-		monsterMap[red1.getMonsterArrayX()][red1.getMonsterArrayY()] = red1;
-		
-		Monster red2 = new Red(10, 15, monsters[0]);
-		monsterMap[red2.getMonsterArrayX()][red2.getMonsterArrayY()] = red2;*/
+		boolean flag1 = true;
+		int x = 0, y = 0;
+		while(flag1) {
+			x = (int)(Math.random() * 50);
+			y = (int)(Math.random() * 28);
+			if(tileMap[x][y][0] == 1 && x != this.characterArrayX && y != this.characterArrayY) {
+				flag1 = false;
+			}
+		}
+		monsterMap[x][y] = new Red(x, y, monsters[0]);
 	}
 	
 	public void setupCharacter() {
 		boolean flag = true;
 		int x = 0;
 		int y = 0;
+		int count = 0;
 		while(flag) {
 			x = (int)(Math.random() * 50);
 			y = (int)(Math.random() * 28);
 			
-			if(tileMap[x][y] == 1) {
+			if(tileMap[x][y][0] == 1) {
 				flag = false;
 			}
 		}
@@ -114,7 +229,7 @@ public class Map {
 		try {
 			
 			terrain[0] = ImageIO.read(getClass().getResource("/block_tiles/ter0.png"));
-			terrain[1] = ImageIO.read(getClass().getResource("/block_tiles/ter1.png"));
+			terrain[1] = ImageIO.read(getClass().getResource("/block_tiles/ter2.png"));
 			
 			monsters[0] = ImageIO.read(getClass().getResource("/monster_sprites/red.png"));
 			
@@ -127,7 +242,7 @@ public class Map {
 		return terrain[tileNumber];
 	}
 	
-	public int[][] getMap() {
+	public int[][][] getMap() {
 		return tileMap;
 	}
 	

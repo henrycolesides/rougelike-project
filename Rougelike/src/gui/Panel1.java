@@ -16,7 +16,7 @@ public class Panel1 extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	public Map map;
-	int[][] roomMap;
+	int[][][] roomMap;
 	Monster[][] monsterMap;
 	
 	private Character character;
@@ -43,22 +43,26 @@ public class Panel1 extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		
-		for(int i = 0; i < 28; i++) {
+		/*for(int i = 0; i < 28; i++) {
 			g2.setColor(Color.DARK_GRAY);
 			g2.drawLine(0, i * 32, 1600, i * 32);
 		}
 		for(int j = 0; j < 50; j++) {
 			g2.setColor(Color.DARK_GRAY);
 			g2.drawLine(j * 32, 0, j*32, 900);
-		} 
+		}*/ 
 		
 		for(int c = 0; c < 50; c++) {
 			for(int r = 0; r < 28; r++) {
-				if(roomMap[c][r] == 1 ){
-					g2.drawImage(map.getTerrainTile(0), c * 32, r * 32, this);
-				}
-				if(monsterMap[c][r] != null) {
-					g2.drawImage(monsterMap[r][c].getMonsterFrame(), c * 32, r * 32, this);
+				if(roomMap[c][r][1] == 1 ) {
+					if(roomMap[c][r][0] == 1) {
+						g2.drawImage(map.getTerrainTile(0), c * 32, r * 32, this);
+					} else if (roomMap[c][r][0] == 2) {
+						g2.drawImage(map.getTerrainTile(1), c * 32, r * 32, this);
+					}
+					if(monsterMap[c][r] != null) {
+						g2.drawImage(monsterMap[c][r].getMonsterFrame(), c * 32, r * 32, this);
+					}
 				}
 			}
 		}

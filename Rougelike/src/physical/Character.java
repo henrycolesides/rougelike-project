@@ -16,7 +16,7 @@ public class Character {
 	public int characterDamageMax = 8;
 	
 	public int combatInitiated = 0;
-	public int[][] roomMap;
+	public int[][][] roomMap;
 	public Monster[][] monsterMap;
 	public Map map;
 	
@@ -29,14 +29,14 @@ public class Character {
 	}
 	
 	public void moveCharacter(int direction) {
-		
+
 		switch(direction) {
 		
 		case KeyEvent.VK_LEFT:
 		
 		if(monsterMap[characterArrayX - 1][characterArrayY] != null){
 			combat(monsterMap[characterArrayX - 1][characterArrayY]);
-		} else if (roomMap[characterArrayX - 1][characterArrayY] == 1) {
+		} else if (roomMap[characterArrayX - 1][characterArrayY][0] == 1) {
 			characterArrayX--;
 		}
 		
@@ -46,7 +46,7 @@ public class Character {
 		
 		if(monsterMap[characterArrayX + 1][characterArrayY] != null) {
 			combat(monsterMap[characterArrayX + 1][characterArrayY]);
-		} else if (roomMap[characterArrayX + 1][characterArrayY] == 1) {
+		} else if (roomMap[characterArrayX + 1][characterArrayY][0] == 1) {
 			characterArrayX++;
 		}
 		
@@ -56,7 +56,7 @@ public class Character {
 		
 		if(monsterMap[characterArrayX][characterArrayY - 1] != null) {
 			combat(monsterMap[characterArrayX][characterArrayY - 1]);
-		} else if (roomMap[characterArrayX][characterArrayY - 1] == 1) {
+		} else if (roomMap[characterArrayX][characterArrayY - 1][0] == 1) {
 			characterArrayY--;
 		}
 		
@@ -66,7 +66,7 @@ public class Character {
 		
 		if(monsterMap[characterArrayX][characterArrayY + 1] != null) {
 			combat(monsterMap[characterArrayX][characterArrayY + 1]);
-		} else if (roomMap[characterArrayX][characterArrayY + 1] == 1) {
+		} else if (roomMap[characterArrayX][characterArrayY + 1][0] == 1) {
 			characterArrayY++;
 		}
 		
@@ -74,6 +74,14 @@ public class Character {
 			
 		default: break;
 		
+		}
+	}
+	
+	public void setVisibilitySquare() {
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				roomMap[characterArrayX + i][characterArrayY + j][1] = 1;
+			}
 		}
 	}
 	

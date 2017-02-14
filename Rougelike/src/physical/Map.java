@@ -13,24 +13,30 @@ public class Map {
 	public Monster[][] monsterMap;
 	public BufferedImage[] monsters;
 	
+	public static final int NUM_COLS = 50;
+	public static final int NUM_ROWS = 27;
+	public static final int TILE_WIDTH = 32;
+	public static final int TOP_LEFT_X = 0;
+	public static final int TOP_LEFT_Y = 100;
+	
 	public int characterArrayX = 0;
 	public int characterArrayY = 0;
 	
 	public Map() {
-		tileMap = new int[50][28][2];
-		for(int i = 0; i < 50; i++) {
-			for(int j = 0; j < 28; j++) {
+		tileMap = new int[NUM_COLS][NUM_ROWS][2];
+		for(int i = 0; i < NUM_COLS; i++) {
+			for(int j = 0; j < NUM_ROWS; j++) {
 				tileMap[i][j][0] = 0;
 			}
 		}
-		monsterMap = new Monster[50][28];
+		monsterMap = new Monster[NUM_COLS][NUM_ROWS];
 		
 		terrain = new BufferedImage[2];
 		monsters = new BufferedImage[1];
 		loadInformations();
 		
 		setupMap();
-		for(int j = 0; j < 50; j++) {
+		for(int j = 0; j < NUM_COLS; j++) {
 			setupMonsters();
 		}
 	}
@@ -44,12 +50,12 @@ public class Map {
 			generateHorizontalHallway();
 			generateVerticalHallway();
 		}
-		for(int j = 0; j < 50; j++) {
-			for(int l = 0; l < 28; l++) {
+		for(int j = 0; j < NUM_COLS; j++) {
+			for(int l = 0; l < NUM_ROWS; l++) {
 				tileMap[j][0][0] = 2;
 				tileMap[0][l][0] = 2;
-				tileMap[j][27][0] = 2;
-				tileMap[49][l][0] = 2;
+				tileMap[j][NUM_ROWS - 1][0] = 2;
+				tileMap[NUM_COLS - 1][l][0] = 2;
 				if(tileMap[j][l][0] != 1) {
 					tileMap[j][l][0] = 2;
 				}
@@ -67,9 +73,9 @@ public class Map {
 			y = 0;
 			boolean flag2 = true;
 			while(flag2) {
-				x = (int)(Math.random() * 50);
-				y = (int)(Math.random() * 28);
-				if(x + width < 50 && x - width >= 0 && y + height < 28 && y - height >= 0) {
+				x = (int)(Math.random() * NUM_COLS);
+				y = (int)(Math.random() * NUM_ROWS);
+				if(x + width < NUM_COLS && x - width >= 0 && y + height < NUM_ROWS && y - height >= 0) {
 					flag2 = false;
 				}
 			}
@@ -99,10 +105,10 @@ public class Map {
 		int x = 0, y = 0;
 		String direction = "";
 		while(flag1) {
-			x = (int)(Math.random() * 50);
-			y = (int)(Math.random() * 28);
+			x = (int)(Math.random() * NUM_COLS);
+			y = (int)(Math.random() * NUM_ROWS);
 			if(tileMap[x][y][0] == 1) {
-				if(y + 1 < 28 && y - 1 >= 0 && x + 1 < 50 && x - 1 >= 0) {
+				if(y + 1 < NUM_ROWS && y - 1 >= 0 && x + 1 < NUM_COLS && x - 1 >= 0) {
 					if(tileMap[x][y - 1][0] == 0 && tileMap[x - 1][y - 1][0] == 0 && tileMap[x + 1][y - 1][0] ==  0) {
 						flag1 = false;
 						direction = "up";
@@ -130,7 +136,7 @@ public class Map {
 			}
 		} else if (direction == "down") {
 			while(flag2) {
-				if(y + count < 28) {
+				if(y + count < NUM_ROWS) {
 					if(tileMap[x][y + count][0] == 0) {
 						tileMap[x][y + count][0] = 1;
 						count++;
@@ -149,10 +155,10 @@ public class Map {
 		int x = 0, y = 0;
 		String direction = "";
 		while(flag1) {
-			x = (int)(Math.random() * 50);
-			y = (int)(Math.random() * 28);
+			x = (int)(Math.random() * NUM_COLS);
+			y = (int)(Math.random() * NUM_ROWS);
 			if(tileMap[x][y][0] == 1) {
-				if(x + 1 < 50 && x - 1 >= 0 && y + 1 < 28 && y - 1 >= 0) {
+				if(x + 1 < NUM_COLS && x - 1 >= 0 && y + 1 < NUM_ROWS && y - 1 >= 0) {
 					if(tileMap[x - 1][y][0] == 0 && tileMap[x - 1][y - 1][0] == 0 && tileMap[x - 1][y + 1][0] ==  0) {
 						flag1 = false;
 						direction = "left";
@@ -180,7 +186,7 @@ public class Map {
 			}
 		} else if (direction == "right") {
 			while(flag) {
-				if(x + count < 50) {
+				if(x + count < NUM_COLS) {
 					if(tileMap[x + count][y][0] == 0) {
 						tileMap[x + count][y][0] = 1;
 						count++;
@@ -198,8 +204,8 @@ public class Map {
 		boolean flag1 = true;
 		int x = 0, y = 0;
 		while(flag1) {
-			x = (int)(Math.random() * 50);
-			y = (int)(Math.random() * 28);
+			x = (int)(Math.random() * NUM_COLS);
+			y = (int)(Math.random() * NUM_ROWS);
 			if(tileMap[x][y][0] == 1 && x != this.characterArrayX && y != this.characterArrayY) {
 				flag1 = false;
 			}
@@ -213,8 +219,8 @@ public class Map {
 		int y = 0;
 		int count = 0;
 		while(flag) {
-			x = (int)(Math.random() * 50);
-			y = (int)(Math.random() * 28);
+			x = (int)(Math.random() * NUM_COLS);
+			y = (int)(Math.random() * NUM_ROWS);
 			
 			if(tileMap[x][y][0] == 1) {
 				flag = false;

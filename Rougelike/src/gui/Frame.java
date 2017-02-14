@@ -7,7 +7,7 @@ public class Frame extends JFrame {
 	private static final long serialVersionUID = 1L;
 			
 	public static final int FRAME_WIDTH = 1606;
-	public static final int FRAME_HEIGHT = 926;
+	public static final int FRAME_HEIGHT = 993;
 	
 	public Frame(Panel1 panel1) {
 		

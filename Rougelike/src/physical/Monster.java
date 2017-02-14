@@ -37,6 +37,11 @@ public class Monster {
 		return monsterHealth;
 	}
 	
+	public int[] getMonsterDamageRange() {
+		int[] damageRange = {monsterDamageMin, monsterDamageMax};
+		return damageRange;
+	}
+	
 	public int getMonsterArrayX() {
 		return monsterArrayX;
 	}

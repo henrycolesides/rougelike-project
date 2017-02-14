@@ -77,6 +77,29 @@ public class Character {
 		}
 	}
 	
+	public void moveCharacterClick(int x, int y) {
+		boolean isAdjacent = false;
+		if(x >= 0 && x < Map.NUM_COLS && y >= 0 && y < Map.NUM_ROWS) {
+			if(roomMap[x][y][0] == 1 && roomMap[x][y][1] == 1 && monsterMap[x][y] == null) {
+				characterArrayX = x;
+				characterArrayY = y;
+			} 
+			if (monsterMap[x][y] != null) {
+				for(int i = -1; i <= 1; i++) {
+					for(int j = -1; j <= 1; j++) {
+						if(x == characterArrayX + i && y == characterArrayY + j) {
+							combat(monsterMap[x][y]);
+						}
+					}
+				}
+			}
+			if(isAdjacent) {
+				combat(monsterMap[x][y]);
+				isAdjacent = false;
+			}
+		}
+	}
+	
 	public void setVisibilitySquare() {
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
@@ -121,7 +144,18 @@ public class Character {
 	public int getCharacterArrayY() {
 		return characterArrayY;
 	}
+	public int getCombat() {
+		return combatInitiated;
+	}
 	
+	public int getCharacterHealth() {
+		return characterHealth;
+	}
+	
+	public int[] getCharacterDamageRange() {
+		int[] damageRange = {characterDamageMin, characterDamageMax};
+		return damageRange;
+	}
 	public void setCharacterArrayX(int x) {
 		this.characterArrayX = x;
 	}
@@ -129,11 +163,7 @@ public class Character {
 	public void setCharacterArratY(int y) {
 		this.characterArrayY = y;
 	}
-	
-	public int getCombat() {
-		return combatInitiated;
-	}
-	
+
 	public void addMap(Map map) {
 		this.map = map;
 		roomMap = this.map.getMap();
